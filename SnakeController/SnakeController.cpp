@@ -215,6 +215,39 @@ Controller::Segment Controller::getNewHead() const
 
 void Controller::receive(std::unique_ptr<Event> e)
 {
+    auto eventID = e->getMessageId();
+    ;
+    
+
+    switch (eventID)
+    {
+        case 0x20:
+        {
+            handleTimePassed();
+            break;
+        }
+        case 0x10:
+        {
+            handleDirectionChange();
+            break;
+        }
+        case 0x40:
+        {
+            handleFoodPositionChange();
+            break;
+        }
+        case 0x42:
+        {
+            handleNewFood();
+            break;
+        }
+        default:
+        {
+            throw UnexpectedEventException();
+            break;
+        }
+    };
+
     try {
         handleTimePassed(*dynamic_cast<EventT<TimeoutInd> const&>(*e));
     } catch (std::bad_cast&) {
